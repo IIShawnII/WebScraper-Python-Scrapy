@@ -11,6 +11,7 @@ BOT_NAME = 'WebScraper'
 
 SPIDER_MODULES = ['WebScraper.spiders']
 NEWSPIDER_MODULE = 'WebScraper.spiders'
+FEED_EXPORT_ENCODING = 'utf-8'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
