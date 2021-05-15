@@ -7,6 +7,7 @@ class SinglePageSpider(scrapy.Spider):
     start_urls = ['https://cochranetel.ca/']
 
     def parse(self, response):
+        
         filename = 'test.txt' 
         with open(filename, mode='a', encoding='UTF-8') as f: 
             f.write(response.url)
