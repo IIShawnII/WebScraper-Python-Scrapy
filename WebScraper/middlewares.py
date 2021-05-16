@@ -2,7 +2,8 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
+import json
+from WebScraper.ConvertToDocx import saveToDocx
 from scrapy import signals
 
 # useful for handling different item types with a single interface
@@ -31,9 +32,30 @@ class WebScraperSpiderMiddleware:
     def process_spider_output(self, response, result, spider):
         # Called with the results returned from the Spider, after
         # it has processed the response.
-        with open("filename.json", mode='w', encoding='UTF-8') as f: 
-            for i in result:
-                f.write(str(i))
+        for data in result:
+            for key in data:
+                values = data[key]
+                if type(values) is list:
+                    values = [x for x in values if not x.isspace()]
+                    values = [s.strip() for s in values]
+                    for i in range(len(values)):
+                        if("\u00a0" in values[i]):
+                            values[i] = values[i].replace("\u00a0", " ")
+                        if("\n" in values[i]):
+                            values[i] = values[i].replace("\n", " ")
+                        if("\u00d7" in values[i]):
+                            values[i] = values[i].replace("\u00d7", "x")
+                        if("\u2013" in values[i]):
+                            values[i] = values[i].replace("\u2013", "-")
+                        if("\u2019" in values[i]):
+                            values[i] = values[i].replace("\u2019", "'")
+                    data[key] = list(set(values))
+        
+        with open(data["uuid"]+".json", mode='w', encoding='UTF-8') as f:
+                json.dump(data, f, indent=4)
+                
+        saveToDocx(data, data["uuid"])
+
         # Must return an iterable of Request, or item objects.
         for i in result:
             yield i
