@@ -9,7 +9,7 @@ from scrapy import signals
 from itemadapter import is_item, ItemAdapter
 
 
-class DemoProjectSpiderMiddleware:
+class WebScraperSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -31,7 +31,9 @@ class DemoProjectSpiderMiddleware:
     def process_spider_output(self, response, result, spider):
         # Called with the results returned from the Spider, after
         # it has processed the response.
-
+        with open("filename.json", mode='w', encoding='UTF-8') as f: 
+            for i in result:
+                f.write(str(i))
         # Must return an iterable of Request, or item objects.
         for i in result:
             yield i
